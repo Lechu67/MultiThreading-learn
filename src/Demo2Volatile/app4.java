@@ -1,4 +1,4 @@
-package Demo1SynchronizingThreads;
+package Demo2Volatile;
 
 import java.util.Scanner;
 
