@@ -5,35 +5,33 @@ import java.util.List;
 import java.util.Random;
 
 public class Worker {
-
+	
 	private Random random = new Random();
-
-	private Object lock1 = new Object();
-	private Object lock2 = new Object();
 	private List<Integer> list1 = new ArrayList<Integer>();
 	private List<Integer> list2 = new ArrayList<Integer>();
-
-	public void stage1() {
-
+	private Object lock1 = new Object();
+	private Object lock2 = new Object();
+	
+	public void stage1(){
+		
 		synchronized (lock1) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			list1.add(random.nextInt());
+			list1.add(random.nextInt(100));
 		}
 	}
 
-	public void stage2() {
-
+	public synchronized void stage2() {
 		synchronized (lock2) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			list2.add(random.nextInt());
+			list2.add(random.nextInt(100));
 		}
 	}
 
@@ -43,17 +41,21 @@ public class Worker {
 			stage2();
 		}
 	}
-
-	public void main() {
+	
+	public void main(){
+		
 		System.out.println("Starting...");
-		long start = System.currentTimeMillis();
-		Thread t1 = new Thread(new Runnable() {
+		long startTime = System.currentTimeMillis();
+		
+		Thread t1 = new Thread (new Runnable() {
+			
 			@Override
 			public void run() {
 				process();
 			}
 		});
 		Thread t2 = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
 				process();
@@ -67,9 +69,10 @@ public class Worker {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		long end = System.currentTimeMillis();
-		System.out.println("time: " + (end - start));
-		System.out.println("List1 = " + list1.size() + "List2 = " + list2.size());
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println("List 1: " +list1.size() + " List 2: " + list2.size() + "\nTime :" + (endTime-startTime));
+		
 	}
+
 }
